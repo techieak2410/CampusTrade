@@ -14,7 +14,7 @@ import upload from '../middlewares/multer.middleware.js';
 
 router.get('/',getAllListings);
 router.get('/:id',getlistingById);
-router.get('/:category',getlistingByCategory);
+router.get('/category/:category',getlistingByCategory);
 router.post('/',upload.single("imageName"),addListing);
 router.put('/:id',upload.single("imageName"),upadteListing);
 router.delete('/:id',deleteListing);

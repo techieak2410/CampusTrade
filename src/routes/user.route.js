@@ -6,12 +6,13 @@ import {
     getUserById,
     addUser,
     deleteUser,
-    updateUser
+    updateUser,
+    getUserByDiffField
 } from '../controllers/user.controller.js'
 
 router.get('/',getAllUsers);
-router.get('/:id',getUserById);
-router.get('/:searchfield',getUserByDiffField);
+router.get('/:id',getUserById); 
+router.get('/:sic',getUserByDiffField);
 router.post('/',addUser);
 router.delete('/:id',deleteUser);
 router.put('/:id',updateUser);

@@ -1,19 +1,26 @@
 
-import multer from 'multer';
+import multer from "multer";
+import path from "path";
+// import fs from "fs";
+
+// absolute path to src/uploads
+const uploadPath = path.join(process.cwd(), "src", "uploads/");
+
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'uploads/')
+    cb(null, uploadPath);
   },
   filename: function (req, file, cb) {
-    const uniqueSuffix =Math.round(Math.random() * 1E9)+file.originalname;
-    cb(null,uniqueSuffix )
+
+    const cleanName = file.originalname.replace(/\s+/g, "-");
+    cb(null, Date.now() + "-" + cleanName);
   }
-})
+});
 
-const upload = multer({ storage: storage })
+const upload = multer({ storage });
 
-export default upload; 
-
+export default upload;
 
 // import multer from "multer";
 

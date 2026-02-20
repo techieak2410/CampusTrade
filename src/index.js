@@ -2,12 +2,16 @@ import express from 'express'
 import dotenv from 'dotenv'
 dotenv.config(); 
 
+import path from 'path'
+import { fileURLToPath } from 'node:url';
 
 const app=express();
 
 app.use(express.json());
 
-import connectDb from './utils/db';
+import connectDb from './utils/db.js';
+import listingRouter from './routes/listing.route.js';
+import userRouter from './routes/user.route.js';
 connectDb();
 
 
@@ -26,3 +30,4 @@ const PORT=process.env.PORT||3001;
 app.listen(PORT,()=>{
     console.log(`App is listening on http://localhost:${PORT}`);
 })
+//Helloo
