@@ -42,8 +42,21 @@ export async function getUserByDiffField(req,res){
 
 export async function addUser(req,res){
     try{
-        console.log(`Got here`);
+        // console.log(`Got here`);
+
         const userdetails=req.body;
+        const {mobile,email,sic}=userdetails;
+        
+        let user=await User.findOne({$or:[
+            {"mobile":mobile},
+            {"sic":sic},
+            {"email":email}
+        ]})
+
+        if(user){
+            return res.status(400).send({"message":"user exists with given sic or mobile or email"});
+        }
+        
         console.log(req.body);
         const newUser=await User.create(userdetails);
         if(!newUser){

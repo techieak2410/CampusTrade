@@ -1,6 +1,7 @@
 import express from 'express'
 import Listing from '../models/listing.model.js'
 import mongoose from 'mongoose';
+import { uploadOnCloudinary } from '../middlewares/cloudinary.middleware.js';
 
 export async function getAllListings(req,res){
     try {
@@ -47,17 +48,25 @@ export async function getlistingByCategory(req,res){
     }
 }
 
-export async function addListing(req,res){
+export async function addListing(req, res) {
     try {
-        const toAddListing=req.body;
-        if(req.file){
-            toAddListing.imageName=req.file.filename;
+        const toAddListing = req.body;
+
+        if (req.file) {
+            const imageLocalpath = req.file.path;
+            const cloudinaryResponse = await uploadOnCloudinary(imageLocalpath);
+            if (!cloudinaryResponse) {
+                return res.status(500).send("Image upload failed");
+            }
+            toAddListing.imageName = cloudinaryResponse.secure_url;
         }
-        const addedListing=await Listing.create(toAddListing);
-        return res.status(200).send(addedListing);
+        const addedListing = await Listing.create(toAddListing);
+
+        return res.status(200).json(addedListing);
 
     } catch (error) {
         console.log(error);
+        return res.status(500).send("Something went wrong");
     }
 }
 
