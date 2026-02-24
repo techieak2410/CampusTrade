@@ -33,7 +33,7 @@ export async function getUserById(req,res){
 export async function getUserByDiffField(req,res){
     try{
         const id=req.params;
-        console.log(id)
+        console.log(id);
 
     }catch(error){
         console.log(error);
