@@ -32,8 +32,22 @@ export async function getUserById(req,res){
 
 export async function getUserByDiffField(req,res){
     try{
-        const id=req.params;
-        console.log(id);
+        const {parameter}=req.params;
+        console.log(parameter);
+
+        const usernew=await User.findOne({
+            $or:[
+                {"email":parameter},
+                {"sic":parameter},
+                {"phone":parameter}
+            ]
+        })
+
+        if (!usernew) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        return res.status(200).send(usernew);
 
     }catch(error){
         console.log(error);

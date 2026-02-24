@@ -12,7 +12,7 @@ import {
 
 router.get('/',getAllUsers);
 router.get('/:id',getUserById); 
-router.get('/:sic',getUserByDiffField);
+router.get('/diff/:parameter',getUserByDiffField);
 router.post('/',addUser);
 router.delete('/:id',deleteUser);
 router.put('/:id',updateUser);
