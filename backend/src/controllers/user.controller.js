@@ -33,13 +33,14 @@ export async function getUserById(req,res){
 export async function getUserByDiffField(req,res){
     try{
         const {parameter}=req.params;
-        console.log(parameter);
+        console.log("URL Param: "+parameter);
+        console.log(typeof(parameter));
 
         const usernew=await User.findOne({
             $or:[
                 {"email":parameter},
-                {"sic":parameter},
-                {"phone":parameter}
+                {"sic":parameter}
+                // {"mobile":parameter}
             ]
         })
 
@@ -59,6 +60,7 @@ export async function addUser(req,res){
         // console.log(`Got here`);
 
         const userdetails=req.body;
+        console.log(req.body)
         const {mobile,email,sic}=userdetails;
         
         let user=await User.findOne({$or:[
@@ -101,7 +103,7 @@ export async function updateUser(req,res){
         const newUserdetails=req.body;
         const updatedUserDetails=await User.findOneAndUpdate({_id:id},newUserdetails,{returnDocument:'after'});
         if(!updatedUserDetails){
-            return res.status(400).send("Cannot Up[date user Details");
+            return res.status(400).send("Cannot Update user Details");
         }
         return res.status(201).send(updatedUserDetails);
     }catch(error){
@@ -110,9 +112,3 @@ export async function updateUser(req,res){
 }
 
 
-// router.get('/',getAllUsers);
-// router.get('/:id',getUserById);
-// router.get('/:searchfield',getUserByDiffField);
-// router.post('/',addUser);
-// router.delete('/:id',deleteUser);
-// router.put('/:id',updateUser);

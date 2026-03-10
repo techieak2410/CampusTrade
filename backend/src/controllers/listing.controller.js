@@ -5,7 +5,6 @@ import { uploadOnCloudinary } from '../middlewares/cloudinary.middleware.js';
 
 export async function getAllListings(req,res){
     try {
-        // console.log("check\n\n\n");
         const listingAllDetails=await Listing.find();
         if(!listingAllDetails){
             return res.status(400).send("Cannot Find Listings");
@@ -51,9 +50,11 @@ export async function getlistingByCategory(req,res){
 export async function addListing(req, res) {
     try {
         const toAddListing = req.body;
+        console.log(req.body);
 
         if (req.file) {
             const imageLocalpath = req.file.path;
+            console.log(imageLocalpath);
             const cloudinaryResponse = await uploadOnCloudinary(imageLocalpath);
             if (!cloudinaryResponse) {
                 return res.status(500).send("Image upload failed");
@@ -62,6 +63,7 @@ export async function addListing(req, res) {
         }
         const addedListing = await Listing.create(toAddListing);
 
+        
         return res.status(200).json(addedListing);
 
     } catch (error) {
@@ -100,10 +102,3 @@ export async function deleteListing(req,res){
     }
 }
 
-
-// router.get('/',getAllListings);
-// router.get('/:id',getlistingById);
-// router.get('/:category',getlistingByCategory);
-// router.post('/',upload.single("imageName"),addListing);
-// router.put('/:id',upload.single("imageName"),upadteListing);
-// router.delete('/:id',deleteListing);
