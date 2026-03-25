@@ -1,5 +1,5 @@
 import express from 'express';
-const router=express.Router();
+const router = express.Router();
 
 import {
     getAllUsers,
@@ -8,15 +8,24 @@ import {
     deleteUser,
     updateUser,
     getUserByDiffField,
-    loginuser
-} from '../controllers/user.controller.js'
+    loginuser,
+    getCurrentUser
+} from '../controllers/user.controller.js';
 
-router.get('/',getAllUsers);
-router.get('/:id',getUserById); 
-router.get('/diff/:parameter',getUserByDiffField);
-router.post('/register',registerUser);
-router.post('/login',loginuser);
-router.delete('/:id',deleteUser);
-router.put('/:id',updateUser);
+import { verifyJWT } from '../middlewares/auth.middleware.js';
+
+// PUBLIC ROUTES
+router.post('/register', registerUser);
+router.post('/login', loginuser);
+
+// PROTECTED ROUTES
+router.get('/me', verifyJWT, getCurrentUser);
+router.delete('/:id', verifyJWT, deleteUser);
+router.put('/:id', verifyJWT, updateUser);
+
+// OTHER ROUTES
+router.get('/diff/:parameter', getUserByDiffField);
+router.get('/:id', getUserById);
+router.get('/', getAllUsers);
 
 export default router;
