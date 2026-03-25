@@ -4,16 +4,18 @@ const router=express.Router();
 import {
     getAllUsers,
     getUserById,
-    addUser,
+    registerUser,
     deleteUser,
     updateUser,
-    getUserByDiffField
+    getUserByDiffField,
+    loginuser
 } from '../controllers/user.controller.js'
 
 router.get('/',getAllUsers);
 router.get('/:id',getUserById); 
 router.get('/diff/:parameter',getUserByDiffField);
-router.post('/',addUser);
+router.post('/register',registerUser);
+router.post('/login',loginuser);
 router.delete('/:id',deleteUser);
 router.put('/:id',updateUser);
 

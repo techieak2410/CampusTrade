@@ -11,7 +11,7 @@ export async function getAllListings(req,res){
         }
         return res.status(200).send(listingAllDetails);
     } catch (error) {
-        console.log(error)
+        return res.status(500).send("Server Error");
     }
 }
 
@@ -29,7 +29,7 @@ export async function getlistingById(req,res){
         }
         return res.status(200).send(listingById);
     } catch (error) {
-        console.log(error);
+        return res.status(500).send("Server Error");
     }
 }
 
@@ -43,7 +43,7 @@ export async function getlistingByCategory(req,res){
         return res.status(200).send(listingBycategory);
         
     } catch (error) {
-        console.log(error);
+        return res.status(500).send("Server Error");
     }
 }
 
@@ -67,8 +67,7 @@ export async function addListing(req, res) {
         return res.status(200).json(addedListing);
 
     } catch (error) {
-        console.log(error);
-        return res.status(500).send("Something went wrong");
+        return res.status(500).send("Server Error");
     }
 }
 
@@ -82,7 +81,7 @@ export async function upadteListing(req,res){
         const addedListing=await Listing.findOneAndUpdate({_id:id},toAddListing,{returnDocument:'after'});
         return res.status(200).send(addedListing);
     } catch (error) {
-        console.log(error);
+        return res.status(500).send("Server Error");
     }
 }
 
@@ -98,7 +97,7 @@ export async function deleteListing(req,res){
         }
         return res.status(200).send(listingById);
     } catch (error) {
-        console.log(error)
+        return res.status(500).send("Server Error");
     }
 }
 

@@ -1,6 +1,5 @@
-import express from "express";
 import User from "../models/user.model.js";
-import mongoose from "mongoose";
+import jwt from "jsonwebtoken";
 
 export async function getAllUsers(req,res){
     try{
@@ -12,7 +11,7 @@ export async function getAllUsers(req,res){
         return res.status(200).send(allUser);
 
     }catch(error){
-        console.log(error);
+        return res.status(500).send("Server Error");
     }
 }
 
@@ -26,7 +25,7 @@ export async function getUserById(req,res){
         }
         return res.status(200).send(userdetails);
     }catch(error){
-        console.log(error);
+        return res.status(500).send("Server Error");
     }
 }
 
@@ -51,11 +50,11 @@ export async function getUserByDiffField(req,res){
         return res.status(200).send(usernew);
 
     }catch(error){
-        console.log(error);
+        return res.status(500).send("Server Error");
     }
 }
 
-export async function addUser(req,res){
+export async function registerUser(req,res){
     try{
         // console.log(`Got here`);
 
@@ -80,7 +79,7 @@ export async function addUser(req,res){
         }
         return res.status(200).send(newUser);
     }catch(error){
-        console.log(error);
+        return res.status(500).send("Server Error");
     }
 }
 
@@ -93,7 +92,7 @@ export async function deleteUser(req,res){
         }
         return res.status(200).send(userdetails);
     }catch(error){
-        console.log(error);
+       return res.status(500).send("Server Error");
     }
 }
 
@@ -107,8 +106,36 @@ export async function updateUser(req,res){
         }
         return res.status(201).send(updatedUserDetails);
     }catch(error){
-        console.log(error);
+        return res.status(500).send("Server Error");
     }
 }
 
+export async function loginuser(req,res){
+    try {
+        const { email, password } = req.body;
+
+        const user = await User.findOne({ email });
+        if (!user) {
+        return res.status(400).json({ message: "User not found" });
+        }
+
+        const isMatch = await user.comparePassword(password);
+        if (!isMatch) {
+        return res.status(400).json({ message: "Invalid password" });
+        }
+
+        const token = jwt.sign(
+        { id: user._id },
+        "SECRET_KEY", // use env in real app
+        { expiresIn: "7d" }
+        );
+
+        res.json({
+        message: "Login successful",
+        token,
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+}
+}
 
