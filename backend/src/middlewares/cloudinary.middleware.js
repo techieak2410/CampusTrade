@@ -15,11 +15,6 @@ cloudinary.config({
 async function uploadOnCloudinary(localFilePath) {
     try{
     // Upload an image
-        console.log(process.env.CLOUDINARY_CLOUD_NAME);
-        console.log("cloud:", process.env.CLOUDINARY_CLOUD_NAME)
-        console.log("key:", process.env.CLOUDINARY_API_KEY)
-        console.log("secret:", process.env.CLOUDINARY_API_SECRET)
-        console.log("hello")
         console.log(localFilePath);
         if(!localFilePath) return null;
         const responseResult=await cloudinary.uploader.upload(

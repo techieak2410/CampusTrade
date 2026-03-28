@@ -3,20 +3,21 @@ const router=express.Router();
 
 import {
     getAllListings,
-    getlistingById,
-    getlistingByCategory,
+    getListingById,
+    getListingByCategory,
     addListing,
-    upadteListing,
+    updateListing,
     deleteListing
 } from '../controllers/listing.controller.js'
 
 import upload from '../middlewares/multer.middleware.js';
+import {verifyJWT} from "../middlewares/auth.middleware.js";
 
 router.get('/',getAllListings);
-router.get('/category/:category', getlistingByCategory);
-router.get('/:id', getlistingById);
-router.post('/',upload.single("imageName"),addListing);
-router.put('/:id',upload.single("imageName"),upadteListing);
-router.delete('/:id',deleteListing);
+router.get('/category/:category', getListingByCategory);
+router.get('/:id', getListingById);
+router.post('/',verifyJWT,upload.single("imageName"),addListing);
+router.patch('/:id',verifyJWT,upload.single("imageName"),updateListing);
+router.delete('/:id',verifyJWT,deleteListing);
 
 export default router;

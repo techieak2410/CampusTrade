@@ -21,7 +21,7 @@ router.post('/login', loginuser);
 // PROTECTED ROUTES
 router.get('/me', verifyJWT, getCurrentUser);
 router.delete('/:id', verifyJWT, deleteUser);
-router.put('/:id', verifyJWT, updateUser);
+router.patch('/:id', verifyJWT, updateUser);
 
 // OTHER ROUTES
 router.get('/diff/:parameter', getUserByDiffField);

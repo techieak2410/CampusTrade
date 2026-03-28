@@ -180,7 +180,7 @@ export const updateUser = async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(
       id,
       req.body,
-      { new: true }
+      {returnDocument: 'after'}
     ).select("-password");
 
     if (!updatedUser) {

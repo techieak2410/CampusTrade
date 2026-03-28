@@ -6,8 +6,8 @@ import { uploadOnCloudinary } from '../middlewares/cloudinary.middleware.js';
 export async function getAllListings(req,res){
     try {
         const listingAllDetails=await Listing.find();
-        if(!listingAllDetails){
-            return res.status(400).send("Cannot Find Listings");
+        if (listingAllDetails.length === 0) {
+            return res.status(404).send("No Listings Found");
         }
         return res.status(200).send(listingAllDetails);
     } catch (error) {
@@ -15,7 +15,7 @@ export async function getAllListings(req,res){
     }
 }
 
-export async function getlistingById(req,res){
+export async function getListingById(req,res){
     try {
         const {id}=req.params;
         console.log(id);
@@ -33,12 +33,14 @@ export async function getlistingById(req,res){
     }
 }
 
-export async function getlistingByCategory(req,res){
+export async function getListingByCategory(req,res){
     try {
         const {category}=req.params;
-        const listingBycategory=await Listing.find({category:category});
-        if(!listingBycategory){
-            return res.status(400).send("cannot find Listing with given category");
+        const listingBycategory = await Listing.find({
+            category: { $regex: new RegExp(`^${category}$`, "i") }
+        });
+        if (listingBycategory.length === 0) {
+            return res.status(404).send("No Listings Found for this category");
         }
         return res.status(200).send(listingBycategory);
         
@@ -49,7 +51,10 @@ export async function getlistingByCategory(req,res){
 
 export async function addListing(req, res) {
     try {
-        const toAddListing = req.body;
+        const toAddListing = {
+            ...req.body,
+            ownerId: req.user.id
+        }
         console.log(req.body);
 
         if (req.file) {
@@ -67,19 +72,39 @@ export async function addListing(req, res) {
         return res.status(200).json(addedListing);
 
     } catch (error) {
-        return res.status(500).send("Server Error");
+        return res.status(500).send(error.message);
     }
 }
 
-export async function upadteListing(req,res){
+export async function updateListing(req, res) {
     try {
-        const {id}=req.params;
-        const toAddListing=req.body;
-        if(req.file){
-            toAddListing.imageName=req.file.path;
+        const { id } = req.params;
+
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).send("Invalid Id");
         }
-        const addedListing=await Listing.findOneAndUpdate({_id:id},toAddListing,{returnDocument:'after'});
-        return res.status(200).send(addedListing);
+        
+        const updateData = { ...req.body };
+        if (req.file) {
+            const cloudinaryResponse = await uploadOnCloudinary(req.file.path);
+            if (!cloudinaryResponse) {
+                return res.status(500).send("Image upload failed");
+            }
+            updateData.imageName = cloudinaryResponse.secure_url;
+        }
+
+        const updatedListing = await Listing.findByIdAndUpdate(
+            id,
+            updateData,
+            { returnDocument:'after' }
+        );
+
+        if (!updatedListing) {
+            return res.status(404).send("Listing not found");
+        }
+
+        return res.status(200).json(updatedListing);
+
     } catch (error) {
         return res.status(500).send("Server Error");
     }
