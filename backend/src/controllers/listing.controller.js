@@ -5,7 +5,7 @@ import { uploadOnCloudinary } from '../middlewares/cloudinary.middleware.js';
 
 export async function getAllListings(req,res){
     try {
-        const listingAllDetails=await Listing.find();
+        const listingAllDetails=await Listing.find().populate("ownerId","name email");
         if (listingAllDetails.length === 0) {
             return res.status(404).send("No Listings Found");
         }

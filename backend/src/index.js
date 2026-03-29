@@ -8,30 +8,31 @@ import connectDb from './utils/db.js';
 import listingRouter from './routes/listing.route.js';
 import userRouter from './routes/user.route.js';
 
-const app=express();
+const app = express();
 
-dotenv.config(); 
+dotenv.config();
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 app.use(express.json());
 app.use(cookieParser());
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-app.use("/uploads", express.static(path.join(__dirname, "uploads"))) 
-
-app.use(cors({
-  origin: "*",
-  credentials: true
-}));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 connectDb();
 
-app.get('/',(req,res)=>{
-    res.send("Hello \nWelcome to campus Trade \nYour Own Partner to Trade within your campus");
+app.get('/', (req, res) => {
+  res.send("Hello \nWelcome to campus Trade \nYour Own Partner to Trade within your campus");
 });
 
-app.use('/Listings',listingRouter);
-app.use('/users',userRouter);
+app.use('/Listings', listingRouter);
+app.use('/users', userRouter);
 
-const PORT=process.env.PORT||3001;
-app.listen(PORT,()=>{
-    console.log(`App is listening on http://localhost:${PORT}`);
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+  console.log(`App is listening on http://localhost:${PORT}`);
 })
