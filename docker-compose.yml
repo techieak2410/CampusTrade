@@ -3,25 +3,25 @@ services:
   # ── Backend: Node.js + Express API ──────────────────
   backend:
     build:
-      context: ./backend       # build context is the backend folder
-      dockerfile: Dockerfile   # backend/Dockerfile
+      context: ./backend # build context is the backend folder
+      dockerfile: Dockerfile # backend/Dockerfile
     container_name: campustrade-backend
     restart: unless-stopped
     ports:
-      - "3001:3001"
+      - "3003:3003"
     env_file:
       - ./backend/.env
     volumes:
-      - ./backend/src/uploads:/app/src/uploads  # persist uploaded images
+      - ./backend/src/uploads:/app/src/uploads # persist uploaded images
 
   # ── Frontend: React → Nginx ──────────────────────────
   frontend:
     build:
-      context: ./frontend      # build context is the frontend folder
-      dockerfile: Dockerfile   # frontend/Dockerfile
+      context: ./frontend # build context is the frontend folder
+      dockerfile: Dockerfile # frontend/Dockerfile
     container_name: campustrade-frontend
     restart: unless-stopped
     ports:
       - "80:80"
     depends_on:
-      - backend                # wait for backend to start first
+      - backend # wait for backend to start first
