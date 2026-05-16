@@ -8,7 +8,7 @@ on:
 
 jobs:
   build-and-push:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
       # 1. Checkout code
@@ -35,7 +35,22 @@ jobs:
       - name: Build Frontend Image
         run: |
           docker build -t ${{ secrets.DOCKER_USERNAME }}/campustrade-frontend ./frontend
-
+          
       - name: Push Frontend Image
         run: |
           docker push ${{ secrets.DOCKER_USERNAME }}/campustrade-frontend
+
+      - name: Deploy to Kubernetes
+        run: |
+          kubectl apply -f k8s/
+
+      - name: Restart Kubernetes Deployments
+        run: |
+          kubectl rollout restart deployment backend-deployment
+          kubectl rollout restart deployment frontend-deployment
+
+       # 9. Verify Deployment
+      - name: Verify Kubernetes Resources
+        run: |
+          kubectl get pods
+          kubectl get svc

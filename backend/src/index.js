@@ -29,8 +29,8 @@ app.get('/', (req, res) => {
   res.send("Hello \nWelcome to campus Trade \nYour Own Partner to Trade within your campus");
 });
 
-app.use('/Listings', listingRouter);
-app.use('/users', userRouter);
+app.use('/api/Listings', listingRouter);
+app.use('/api/users', userRouter);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
